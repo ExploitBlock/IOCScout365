@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Office 365 IOC Extractor",
+  "version": "0.1.0",
+  "description": "Extracts IOCs from suspected Office 365 phishing pages.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*",
+    "file:///*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/phishing.png",
+      "48": "images/phishing.png",
+      "128": "images/phishing.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "icons": {
+    "16": "images/phishing.png",
+    "48": "images/phishing.png",
+    "128": "images/phishing.png"
+  }
+}
