@@ -50,11 +50,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+
+  // Helper to sanitize strings for textContent
+  function sanitizeString(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
+      .replace(/'/g, "'");
+  }
+
   // Request IOCs from the content script when the popup is opened (secure message passing)
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs[0] || !tabs[0].id) {
       console.error("Could not get active tab ID.");
-      iocList.innerHTML = '<li>Error: Could not access active tab.</li>';
+      iocList.innerHTML = '';
+      const li = document.createElement('li');
+      li.textContent = 'Error: Could not access active tab.';
+      iocList.appendChild(li);
       return;
     }
     chrome.tabs.sendMessage(
@@ -63,7 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
       (response) => {
         if (chrome.runtime.lastError) {
           console.error("Error sending message: ", chrome.runtime.lastError.message);
-          iocList.innerHTML = '<li>Error: ' + chrome.runtime.lastError.message + '</li>';
+          iocList.innerHTML = '';
+          const li = document.createElement('li');
+          li.textContent = 'Error: ' + sanitizeString(chrome.runtime.lastError.message);
+          iocList.appendChild(li);
           return;
         }
         if (response && !response.error) {
@@ -74,7 +91,10 @@ document.addEventListener('DOMContentLoaded', function() {
           currentIocs = response;
           updatePopup(currentIocs);
         } else {
-          iocList.innerHTML = '<li>No IOCs found or an error occurred during extraction.</li>';
+          iocList.innerHTML = '';
+          const li = document.createElement('li');
+          li.textContent = 'No IOCs found or an error occurred during extraction.';
+          iocList.appendChild(li);
           console.warn("Response problematic: ", response);
         }
       }

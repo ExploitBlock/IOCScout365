@@ -1,0 +1,35 @@
+body {
+  font-family: sans-serif;
+  width: 300px;
+  padding: 10px;
+}
+h3 {
+  margin-top: 0;
+}
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+li {
+  word-wrap: break-word;
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+}
+#iocBanner {
+  display: none;
+  background: #ffe066;
+  color: #333;
+  padding: 6px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+.show-banner {
+  display: block !important;
+}
+button {
+  margin-bottom: 10px;
+}

@@ -2,32 +2,12 @@
 <html>
 <head>
   <title>IOC Extractor</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      width: 300px;
-      padding: 10px;
-    }
-    h3 {
-      margin-top: 0;
-    }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    li {
-      word-wrap: break-word;
-      margin-bottom: 5px;
-      padding: 5px;
-      background-color: #f0f0f0;
-      border-radius: 3px;
-    }
-  </style>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div id="iocBanner" style="display:none; background:#ffe066; color:#333; padding:6px; border-radius:4px; margin-bottom:10px; font-weight:bold; text-align:center;"></div>
+  <div id="iocBanner"></div>
   <h3>Extracted IOCs</h3>
-  <button id="downloadJsonBtn" style="margin-bottom: 10px;">Download as JSON</button>
+  <button id="downloadJsonBtn">Download as JSON</button>
   <ul id="iocList">
     <li>No IOCs found yet.</li>
   </ul>

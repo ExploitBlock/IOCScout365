@@ -30,5 +30,8 @@
     "16": "images/phishing.png",
     "48": "images/phishing.png",
     "128": "images/phishing.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self';"
   }
 }
