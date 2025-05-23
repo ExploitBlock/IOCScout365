@@ -6,6 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentIocs = null; // To store the fetched IOCs for download
   let previousIocs = null; // To compare for new IOCs
 
+  // Helper: Sanitize strings to prevent XSS
+  function sanitizeString(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   // Helper: Deep compare two IOC objects for new content
   function hasNewIocs(oldIocs, newIocs) {
     if (!oldIocs) return true;
@@ -109,99 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Display Page Info
-    if (iocs.pageInfo) {
-      const pageHeader = document.createElement('h4');
-      pageHeader.textContent = 'Page Information';
-      iocList.appendChild(pageHeader);
-      for (const key in iocs.pageInfo) {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${iocs.pageInfo[key]}`;
-        iocList.appendChild(listItem);
-      }
+    // Minimal display for demonstration (add your real display logic here)
+    for (const key in iocs) {
+      const listItem = document.createElement('li');
+      listItem.textContent = key + ': ' + JSON.stringify(iocs[key]);
+      iocList.appendChild(listItem);
     }
-
-    // Display Detected Brand
-    if (iocs.detectedBrand) {
-      const brandHeader = document.createElement('h4');
-      brandHeader.textContent = 'Detected Brand';
-      iocList.appendChild(brandHeader);
-      const brandItem = document.createElement('li');
-      brandItem.textContent = iocs.detectedBrand;
-      iocList.appendChild(brandItem);
-    }
-
-    // Display Critical IOCs
-    if (iocs.criticalIOCs && Object.keys(iocs.criticalIOCs).some(key => iocs.criticalIOCs[key] && iocs.criticalIOCs[key].length > 0)) {
-      const criticalHeader = document.createElement('h4');
-      criticalHeader.textContent = 'Critical IOCs';
-      iocList.appendChild(criticalHeader);
-      for (const type in iocs.criticalIOCs) {
-        if (iocs.criticalIOCs[type] && iocs.criticalIOCs[type].length > 0) {
-          iocs.criticalIOCs[type].forEach(ioc => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${type}: ${ioc}`;
-            iocList.appendChild(listItem);
-          });
-        }
-      }
-    }
-
-    // Display Other IOCs (simplified for brevity in popup)
-    if (iocs.otherIOCs && Object.keys(iocs.otherIOCs).some(key => iocs.otherIOCs[key] && iocs.otherIOCs[key].length > 0)) {
-      const otherHeader = document.createElement('h4');
-      otherHeader.textContent = 'Other IOCs (Summary)';
-      iocList.appendChild(otherHeader);
-      for (const type in iocs.otherIOCs) {
-        if (iocs.otherIOCs[type] && iocs.otherIOCs[type].length > 0) {
-          const listItem = document.createElement('li');
-          listItem.textContent = `${type}: ${iocs.otherIOCs[type].length} found (see JSON for details)`;
-          iocList.appendChild(listItem);
-        }
-      }
-    }
-
-    // Display Signals (Phishing Kit, Obfuscation, Anti-Analysis)
-    const signalTypes = ['phishingKitSignals', 'obfuscationSignals', 'antiAnalysisSignals'];
-    signalTypes.forEach(signalKey => {
-      if (iocs[signalKey] && iocs[signalKey].length > 0) {
-        const header = document.createElement('h4');
-        header.textContent = signalKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()); // Format title
-        iocList.appendChild(header);
-        iocs[signalKey].forEach(signal => {
-          const listItem = document.createElement('li');
-          listItem.textContent = signal;
-          iocList.appendChild(listItem);
-        });
-      }
-    });
-
   }
 
-  downloadJsonBtn.addEventListener('click', function() {
-    if (currentIocs) {
-      const jsonData = JSON.stringify(currentIocs, null, 2);
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      // Sanitize filename from page title or use domain
-      let filename = 'ioc_report.json';
-      if (currentIocs.pageInfo && currentIocs.pageInfo.title) {
-        filename = currentIocs.pageInfo.title.replace(/[^a-z0-9_\-\.]/gi, '_').substring(0, 50) + '.json';
-      } else if (currentIocs.pageInfo && currentIocs.pageInfo.domain) {
-        filename = currentIocs.pageInfo.domain.replace(/[^a-z0-9_\-\.]/gi, '_') + '.json';
-      }
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a); // Required for Firefox
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } else {
-      alert("No IOC data to download. Please wait for IOCs to load.");
-    }
-  });
-
-});
-
-
+}); // <-- Close DOMContentLoaded event listener

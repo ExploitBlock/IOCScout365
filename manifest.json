@@ -12,6 +12,9 @@
     "https://*/*",
     "file:///*"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; default-src 'self'"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
