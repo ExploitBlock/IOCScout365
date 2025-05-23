@@ -1,11 +1,18 @@
 // Listen for messages from the popup (secure message passing)
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "GET_IOCS") {
-    sendResponse(performExtraction());
+    try {
+      const iocData = performExtraction();
+      sendResponse(iocData);
+    } catch (error) {
+      debugLog("Error performing IOC extraction:", error);
+      sendResponse({ error: true, message: "Failed to extract IOCs: " + error.message });
+    }
+    return true; // Keep the message channel open for async response
   }
 });
 // content_script.js
-const DEBUG = true; // Set to false to disable console logs
+const DEBUG = false; // Set to false to disable console logs in production
 function debugLog(message, ...optionalParams) {
   if (DEBUG) {
     console.log("[IOCScout365]", message, ...optionalParams);
